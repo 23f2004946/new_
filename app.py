@@ -4,7 +4,7 @@ import jwt
 
 app = FastAPI()
 
-EMAIL = "YOUR_EMAIL"
+EMAIL = "23f2004946@ds.study.iitm.ac.in"
 
 ISSUER = "https://idp.exam.local"
 AUDIENCE = "tds-3il8kp0d.apps.exam.local"
@@ -24,6 +24,8 @@ class TokenRequest(BaseModel):
     token: str
 
 
+from fastapi.responses import JSONResponse
+
 @app.post("/verify")
 def verify(req: TokenRequest):
 
@@ -39,13 +41,14 @@ def verify(req: TokenRequest):
 
         return {
             "valid": True,
-            "email": payload.get("email"),
-            "sub": payload.get("sub"),
-            "aud": payload.get("aud")
+            "email": payload["email"],
+            "sub": payload["sub"],
+            "aud": payload["aud"]
         }
 
     except Exception:
-        raise HTTPException(
+
+        return JSONResponse(
             status_code=401,
-            detail={"valid": False}
+            content={"valid": False}
         )
